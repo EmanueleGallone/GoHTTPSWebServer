@@ -8,16 +8,18 @@ import (
 )
 
 var listenAddr = "127.0.0.1"
+var httpsPort = ":9090"
 
 func main() {
+
+	httpsAddr := listenAddr+httpsPort
 
 	// Check if the cert files are available.
 	// If they are not available, generate new ones.
 	// Obviously, only for testing purpose.
 	// for production, substitute the certificate with genuine ones
 	if err := cert.Verify("cert.pem", "key.pem"); err != nil {
-		addr := listenAddr+":9090"
-		addrPointer := &addr
+		addrPointer := &httpsAddr
 		err = cert.Create(addrPointer)
 		if err != nil {
 			log.Fatal("Error: Couldn't create https certs.")
@@ -26,7 +28,7 @@ func main() {
 
 	http.HandleFunc("/", handler)
 	//start HTTPS on Goroutine
-	go http.ListenAndServeTLS(listenAddr+":9090", "cert.pem", "key.pem", nil)
+	go http.ListenAndServeTLS(httpsAddr, "cert.pem", "key.pem", nil)
 
 	// Start the HTTP server and redirect all incoming connections to HTTPS
 	err3 := http.ListenAndServe(listenAddr+":80", http.HandlerFunc(redirectToHttps))
