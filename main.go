@@ -44,7 +44,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func redirectToHttps(w http.ResponseWriter, r *http.Request) {
-	// Redirect the incoming HTTP request. Note that "127.0.0.1:80" will only work if you are accessing the server from your local machine.
+	// Redirect the incoming HTTP request.
 	fmt.Println("redirecting " + r.RemoteAddr + " to https")
 	http.Redirect(w, r, "https://"+listenAddr+":9090"+r.RequestURI, http.StatusMovedPermanently)
 
