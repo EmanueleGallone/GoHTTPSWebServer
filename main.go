@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/kabukky/httpscerts"
+	"./cert"
 	"log"
 	"net/http"
 )
@@ -15,8 +15,10 @@ func main() {
 	// If they are not available, generate new ones.
 	// Obviously, only for testing purpose.
 	// for production, substitute the certificate with genuine ones
-	if err := httpscerts.Check("cert.pem", "key.pem"); err != nil {
-		err = httpscerts.Generate("cert.pem", "key.pem", listenAddr+":9090")
+	if err := cert.Verify("cert.pem", "key.pem"); err != nil {
+		addr := listenAddr+":9090"
+		addrPointer := &addr
+		err = cert.Create(addrPointer)
 		if err != nil {
 			log.Fatal("Error: Couldn't create https certs.")
 		}
